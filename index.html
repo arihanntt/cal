@@ -3,13 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dark Calculator</title>
+  <title>Dark Calculator + Planner</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="manifest" href="manifest.json" />
 </head>
 <body>
-  <div class="calculator">
+
+  <!-- Top Nav Buttons -->
+  <div class="top-btns">
+    <button onclick="showCalculator()">🧮 Calculator</button>
+    <button onclick="showPlanner()">💼 Smart Monthly Planner</button>
+    <button onclick="toggleHistory()">🕓 History</button>
+  </div>
+
+  <!-- Fullscreen Calculator -->
+  <div class="calculator fullscreen-calculator" id="calculatorSection">
     <div id="display" class="display">0</div>
+
     <div class="buttons">
       <button onclick="append('7')">7</button>
       <button onclick="append('8')">8</button>
@@ -33,11 +43,31 @@
 
       <button class="clear" onclick="clearDisplay()">C</button>
     </div>
+  </div>
 
-    <div class="history">
-      <h3>🕓 History</h3>
-      <ul id="historyList"></ul>
+  <!-- Smart Monthly Planner -->
+  <div class="planner" id="plannerSection" style="display: none;">
+    <h2>💼 Smart Monthly Planner</h2>
+    <label for="monthlyIncome">💸 Monthly Income (₹):</label>
+    <input type="number" id="monthlyIncome" placeholder="Enter your monthly income" oninput="calculatePlanner()" />
+
+    <div class="output">
+      <h3>💰 Breakdown (Fixed %):</h3>
+      <p>💝 GF Spending (30%): ₹<span id="gfSpend">0</span></p>
+      <p>💖 GF Saving (20%): ₹<span id="gfSave">0</span></p>
+      <p>🧍 Your Spending (30%): ₹<span id="youSpend">0</span></p>
+      <p>🏦 Your Saving (20%): ₹<span id="youSave">0</span></p>
     </div>
+  </div>
+
+  <!-- Fullscreen History Page -->
+  <div class="history-page" id="historyPage" style="display: none;">
+    <div class="history-header">
+      <button onclick="closeHistory()">🔙 Back</button>
+      <h2>🕓 History</h2>
+      <button class="clear-history" onclick="clearHistory()">🗑 Clear</button>
+    </div>
+    <ul id="historyListPage" class="history-list"></ul>
   </div>
 
   <script src="script.js"></script>
