@@ -1,96 +1,258 @@
+/* Base reset */
+* {
+  box-sizing: border-box;
+}
+
+/* Body styling */
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: #121212;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #0a0a0a;
+  color: #f0f0f0;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
+  padding-top: 100px;
+  padding-bottom: 40px;
 }
 
-.calculator {
-  background: #1e1e1e;
-  padding: 25px;
-  border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
-  width: 350px;
+/* Top nav buttons */
+.top-btns {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 99;
+  background: #0a0a0a;
+  padding: 6px 14px;
+  border-radius: 14px;
 }
 
-.display {
-  background: #000;
-  color: #0f0;
-  font-size: 2rem;
-  text-align: right;
-  padding: 20px;
+.top-btns button {
+  padding: 10px 16px;
+  font-size: 0.95rem;
+  background: #1c1c1e;
+  border: 1px solid #333;
+  color: #fff;
   border-radius: 10px;
-  margin-bottom: 20px;
-  height: 60px;
-  overflow-x: auto;
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
 
-.buttons {
+.top-btns button:hover {
+  background: #2c2c2e;
+}
+
+/* === FULLSCREEN CALCULATOR === */
+.fullscreen-calculator {
+  position: fixed;
+  top: 120px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #0a0a0a;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  z-index: 1;
+  padding-bottom: 20px;
+}
+
+.fullscreen-calculator .display {
+  position: absolute;
+  top: 100px; /* 🔼 was 20px — now moved below history button */
+  width: 100%;
+  font-size: 3rem;
+  background: none;
+  padding: 20px 20px 10px;
+  text-align: right;
+  color: #fff;
+  border-radius: 0;
+  box-shadow: none;
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+}
+
+
+.fullscreen-calculator .display::-webkit-scrollbar {
+  display: none;
+}
+
+.fullscreen-calculator .buttons {
+  width: 100%;
+  margin: 0 auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-bottom: 20px;
+  grid-auto-rows: 80px; /* 🔥 Fixed row height for all buttons */
+  gap: 0;
+  border: 1px solid #444;
 }
 
-button {
-  padding: 18px;
-  font-size: 1.1rem;
-  border: none;
-  border-radius: 12px;
-  background: #333;
-  color: #fff;
+
+.fullscreen-calculator button {
+  font-size: 1.3rem;
+  border: 1px solid #444;
+  border-radius: 0;
+  background: #2c2c2e;
+  color: #f5f5f5;
   cursor: pointer;
-  transition: 0.2s;
+  transition: background 0.2s ease;
+  padding: 0; /* Remove padding so height is only from grid row height */
+}
+.fullscreen-calculator button:hover {
+  background: #3a3a3c;
 }
 
-button:hover {
-  background: #444;
+.fullscreen-calculator .operator {
+  background: #636366;
+  color: white;
 }
 
-.operator {
-  background: #f39c12;
-  color: #000;
-}
-
-.equal {
-  background: #27ae60;
+.fullscreen-calculator .equal {
+  background: #0a84ff;
   color: white;
   grid-column: span 2;
+  font-size: 1.4rem; /* bigger */
 }
 
-.clear {
-  background: #e74c3c;
+.fullscreen-calculator .clear {
+  background: #ff453a;
   color: white;
-  grid-column: span 2;
+  grid-column: span 3;
+  font-size: 1.2rem;
 }
 
-.history {
-  background: #2c2c2c;
-  padding: 10px;
-  border-radius: 10px;
-  color: #ccc;
-  max-height: 150px;
+/* Toggle History Button */
+#toggleHistoryBtn {
+  position: absolute;
+  top: 65px;
+  right: 20px;
+  z-index: 3;
+  font-size: 0.9rem;
+  padding: 6px 12px;
+  background: #1c1c1e;
+  color: #fff;
+  border: 1px solid #333;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+#toggleHistoryBtn:hover {
+  background: #2c2c2e;
+}
+
+/* Fullscreen History Page */
+.history-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #0a0a0a;
+  color: #fff;
+  padding: 20px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
   overflow-y: auto;
 }
 
-.history h3 {
-  margin-top: 0;
-  font-size: 1rem;
-  color: #f1f1f1;
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
-.history ul {
+.history-header button {
+  background: #1c1c1e;
+  border: 1px solid #333;
+  color: white;
+  padding: 10px 14px;
+  font-size: 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.history-list {
   list-style: none;
-  padding-left: 0;
+  padding: 0;
   margin: 0;
 }
 
-.history li {
+.history-list li {
+  border-bottom: 1px solid #333;
+  padding: 12px 6px;
+  font-size: 1.1rem;
+}
+
+/* Clear History Button */
+.clear-history {
+  background: transparent;
+  color: #ff3b30;
   font-size: 0.9rem;
-  padding: 5px 0;
-  border-bottom: 1px solid #444;
+  border: none;
+  cursor: pointer;
+}
+
+/* Planner section */
+.planner {
+  background: #1c1c1e;
+  padding: 24px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  width: 100%;
+  max-width: 370px;
+  margin-top: 500px;
+}
+
+.planner input[type="number"] {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: none;
+  margin: 10px 0 20px;
+  background: #2c2c2e;
+  color: #fff;
+}
+
+.output p {
+  font-size: 1rem;
+  margin: 10px 0;
+  padding-left: 5px;
+}
+
+/* Mobile tweaks */
+@media screen and (max-width: 480px) {
+  .fullscreen-calculator .display {
+    font-size: 2.2rem;
+    padding: 18px;
+  }
+
+  .fullscreen-calculator button {
+    padding: 14px;
+    font-size: 1rem;
+  }
+
+  .top-btns {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .top-btns button {
+    font-size: 0.9rem;
+    width: 140px;
+  }
+
+  .planner {
+    margin-top: 520px;
+  }
 }
