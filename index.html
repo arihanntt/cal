@@ -9,17 +9,21 @@
 </head>
 <body>
 
-  <!-- Top Nav Buttons -->
+  <!-- Top Nav Dropdown -->
   <div class="top-btns">
-    <button onclick="showCalculator()">🧮 Calculator</button>
-    <button onclick="showPlanner()">💼 Smart Monthly Planner</button>
-    <button onclick="toggleHistory()">🕓 History</button>
+    <select id="toolSelector" onchange="handleToolSelect()">
+      <option disabled selected>🔧 Choose Tool</option>
+      <option value="calculator">🧮 Calculator</option>
+      <option value="planner">💼 Smart Monthly Planner</option>
+      <option value="goal">📅 Daily Goal Calculator</option>
+      <option value="percent">🔢 Percentage Tool</option>
+      <option value="history">🕓 History</option>
+    </select>
   </div>
 
   <!-- Fullscreen Calculator -->
   <div class="calculator fullscreen-calculator" id="calculatorSection">
     <div id="display" class="display">0</div>
-
     <div class="buttons">
       <button onclick="append('7')">7</button>
       <button onclick="append('8')">8</button>
@@ -45,7 +49,7 @@
     </div>
   </div>
 
-  <!-- Smart Monthly Planner -->
+  <!-- Monthly Planner -->
   <div class="planner" id="plannerSection" style="display: none;">
     <h2>💼 Smart Monthly Planner</h2>
     <label for="monthlyIncome">💸 Monthly Income (₹):</label>
@@ -60,6 +64,19 @@
     </div>
   </div>
 
+  <!-- Daily Goal Planner Page -->
+  <div class="planner" id="goalPlannerSection" style="display: none; margin-top: 250px;">
+    <h2>📅 Daily Goal Calculator</h2>
+    <label for="targetAmount">💰 Target Amount (₹):</label>
+    <input type="number" id="targetAmount" placeholder="e.g. 100000" />
+    <label for="daysCount">📆 Days:</label>
+    <input type="number" id="daysCount" placeholder="e.g. 30" />
+    <button onclick="calculateDailyGoal()">📊 Calculate Daily Goal</button>
+    <p id="dailyGoalOutput" style="margin-top: 10px;"></p>
+    <button onclick="saveGoal()">💾 Save This Goal</button>
+    <ul id="savedGoals" style="margin-top: 10px; font-size: 0.9rem;"></ul>
+  </div>
+
   <!-- Fullscreen History Page -->
   <div class="history-page" id="historyPage" style="display: none;">
     <div class="history-header">
@@ -70,10 +87,50 @@
     <ul id="historyListPage" class="history-list"></ul>
   </div>
 
+  <!-- Percentage Tool Popup -->
+  <div class="planner" id="percentageTool" style="display: none; margin-top: 250px;">
+    <h2>🔢 Percentage Tool</h2>
+    <label>Base Value (₹):</label>
+    <input type="number" id="baseValue" placeholder="e.g. 10000" />
+    <label>Percentage (%):</label>
+    <input type="number" id="percentValue" placeholder="e.g. 25" />
+    <button onclick="calcPercentage()">✅ Calculate</button>
+    <p id="percentOutput" style="margin-top: 10px;"></p>
+  </div>
+
   <script src="script.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js');
+    }
+
+    function handleToolSelect() {
+      const value = document.getElementById('toolSelector').value;
+
+      // Hide all sections
+      document.getElementById('calculatorSection').style.display = 'none';
+      document.getElementById('plannerSection').style.display = 'none';
+      document.getElementById('goalPlannerSection').style.display = 'none';
+      document.getElementById('historyPage').style.display = 'none';
+      document.getElementById('percentageTool').style.display = 'none';
+
+      // Show selected
+      if (value === 'calculator') showCalculator();
+      else if (value === 'planner') showPlanner();
+      else if (value === 'goal') showGoalPlanner();
+      else if (value === 'history') toggleHistory(true);
+      else if (value === 'percent') document.getElementById('percentageTool').style.display = 'block';
+    }
+
+    function calcPercentage() {
+      const base = parseFloat(document.getElementById('baseValue').value);
+      const percent = parseFloat(document.getElementById('percentValue').value);
+      if (isNaN(base) || isNaN(percent)) {
+        document.getElementById('percentOutput').innerText = '⚠️ Please enter both values.';
+        return;
+      }
+      const result = (base * percent) / 100;
+      document.getElementById('percentOutput').innerText = `${percent}% of ₹${base} = ₹${result.toFixed(2)}`;
     }
   </script>
 </body>
